@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+
+{% load static %}
+{% load template_filter %}
+
+{% block content %}
+
+{% if not recipes %}
+{% include 'recipebook/none_info.html' %}
+{% endif %}
+{% for recipe in recipes %}
+<div class="container">
+    <div class="card-deck">
+        <div class="card card_margin">
+            <img class="card-img-top" src="{{ recipe.img_path }}" alt="Card image cap">
+            <div class="card-body card_margin">
+                <h5 class="card-title">{{ recipe.name }}</h5>
+                <p class="card-text" style="">{{ recipe.description }}</p>
+                <p class="card-text" style="">
+                    {% with recipe.ingredients_list|split:";" as ingredients_list %}
+                    {% for ingredient in ingredients_list %}
+                <li> {{ ingredient }}</li>
+                {% endfor %}
+                {% endwith %}
+                </p>
+                <button type="button" class="btn btn-primary btn-lg">Подробнее</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block form %}
+<form action="{% url 'recipe' %}" method="get" class="js-form">
+    <div class="input-group mb-3">
+        <input type="search" class="form-control" placeholder="Введите название блюда или ингредиента"
+               name='search' aria-label="Поиск" aria-describedby="button-addon2" required="">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Поиск</button>
+    </div>
+</form>
+{% endblock %}

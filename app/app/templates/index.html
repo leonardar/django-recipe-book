@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    {% load static %}
+    {% load template_filter %}
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="{% static '/css/library/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/library/select2.min.css' %}"/>
+
+    <style>
+
+    .jumbotron-heading {
+    padding-bottom: 60px;
+    color: white;
+    font-weight: bold;
+    font-style: oblique;
+    }
+    .jumbotron {
+    background: url('../static/img/coco.jpeg') no-repeat;
+    background-size: 100%;
+    }
+    .card-deck{
+    margin-bottom:45px;
+    background-color: #FFF8DC;
+    }
+    .btn{
+    background-color: #DC143C;
+    font-weight: bold;
+    }
+    .navbar{
+    height:60px;
+    }
+    .badge{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    height:30 px;
+    }
+    .btn-primary{
+    margin-right: auto;
+    margin-left: 0;
+    }
+    .card-title{
+    font-weight: bold;
+    }
+
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary"></nav>
+</header>
+
+<main role="main">
+    <section class="jumbotron p-4 text-center bg">
+        <div class="container">
+            <h1 class="jumbotron-heading">Книга рецептов</h1>
+            <div class="row">
+                <div class="col-md-12">
+                    {% block form %} {% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary"></nav>
+</footer>
+
+{% block extrajs %}
+<script src="{% static '/js/library/select2.min.js' %}"></script>
+<script src="{% static '/js/library/select2.ru.js' %}"></script>
+<script src="{% static '/js/booklist.select.js' %}"></script>
+{% endblock %}
+
+</body>
+</html>

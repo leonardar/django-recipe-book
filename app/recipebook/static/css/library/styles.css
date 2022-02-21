@@ -1,0 +1,13 @@
+.dist {
+    padding-bottom: 60px;
+    color: white;
+    font-weight: bold;
+    font-style: oblique;
+    }
+    .disti {
+    font-style: oblique;
+    font-weight: bold;
+    }
+    .bg {
+    background: url(../static/img/avstrijskij-guljas-medium.jpg);
+    }
