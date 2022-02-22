@@ -61,7 +61,7 @@ python manage.py createsuperuser
 #### Добавление фикстур
 
 ```bash
-python manage.py loaddata author publishing_house book
+python manage.py loaddata data
 ```
 
 Проект доступен по адресу http://127.0.0.1:8000

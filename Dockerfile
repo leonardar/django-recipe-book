@@ -11,6 +11,7 @@ RUN pip install --upgrade pip -r /requirements.txt
 RUN mkdir /app
 WORKDIR /app
 COPY ./app /app
+COPY ./.env.dist /.env
 
 RUN adduser --disabled-password --gecos '' python
 RUN adduser python sudo
