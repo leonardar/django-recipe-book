@@ -6,11 +6,10 @@ class Ingredient(models.Model):
     Модель ингредиента:
     name - название ингредиента
     """
-    id = models.AutoField(primary_key=True)
 
     name = models.CharField(
         max_length=400,
-        verbose_name='Название ингредиента'
+        verbose_name='Название ингредиента',
     )
 
     def __str__(self):
@@ -28,11 +27,11 @@ class Recipe(models.Model):
     description - описание рецепта,
     ingredients - ингредиенты рецепта
     """
-    id = models.AutoField(primary_key=True)
 
     name = models.TextField(
         max_length=400,
         verbose_name='Название рецепта',
+        unique=True,
     )
     description = models.TextField(
         max_length=1000,
@@ -46,17 +45,9 @@ class Recipe(models.Model):
         blank=True
     )
 
-    # список всех рецептов которые содержат ингредиент
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient'
-    )
-
-    ingredients_list = models.TextField(
-        max_length=500,
-        verbose_name='Список ингредиентов',
-        blank=True,
-
     )
 
     def __str__(self):
@@ -74,7 +65,6 @@ class RecipeIngredient(models.Model):
     ingredient - ингредиент,
     amount - количество ингредиента
     """
-    id = models.AutoField(primary_key=True)
 
     recipe = models.ForeignKey(
         Recipe,

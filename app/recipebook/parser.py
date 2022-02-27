@@ -106,13 +106,11 @@ def db_fill(lst: list):
     Функция на заполнение данными из словаря БД PostgreSQL
     """
     try:
-        # Подключиться к существующей базе данных
         connection = psycopg2.connect(user="postgres",
-                                      # пароль, который указан при установке PostgreSQL
                                       password="36499410",
                                       host="127.0.0.1",
                                       port="5432",
-                                      database="db_recipebook")
+                                      database="db_name")
 
         cursor = connection.cursor()
 
@@ -122,9 +120,7 @@ def db_fill(lst: list):
             print(dish_ingredients)
             dish_cooking_description = value['Описание блюда']
             dish_img_path = value['Путь к изображению']
-            insert_recipe_query: str = (f"INSERT INTO recipebook_recipe (NAME, DESCRIPTION, img_path,\
-             ingredients_list) VALUES ('{dish_title}','{dish_cooking_description}','{dish_img_path}', \
-             '{dish_ingredients}') RETURNING id")
+            insert_recipe_query: str = (f"insert INTO recipebook_recipe (NAME, DESCRIPTION, img_path) VALUES ('{dish_title}','{dish_cooking_description}','{dish_img_path}') ON CONFLICT (NAME) DO UPDATE SET name=EXCLUDED.name RETURNING id")
             cursor.execute(insert_recipe_query)
 
             dish_id = cursor.fetchone()[0]
@@ -136,7 +132,7 @@ def db_fill(lst: list):
                 num = ing.count(':')
                 if num == 1:
                     product, quantity = ing.split(':')
-                    request = f"""select exists(select * from recipebook_ingredient where NAME = '{product}')"""
+                    request = f"""SELECT exists(SELECT * FROM recipebook_ingredient WHERE name = '{product}')"""
                     cursor.execute(request)
                     responce = cursor.fetchone()[0]
                     if responce is True:
@@ -144,10 +140,13 @@ def db_fill(lst: list):
                         cursor.execute(request2)
                         product_id = cursor.fetchone()[0]
                     else:
-                        insert_product_query = f"""INSERT INTO recipebook_ingredient (NAME) VALUES ('{product}') 
-                        RETURNING id """
+                        insert_product_query = f"""INSERT INTO recipebook_ingredient (NAME) VALUES (\'{product}\') RETURNING id """
                         cursor.execute(insert_product_query)
                         product_id = cursor.fetchone()[0]
+                        insert_recipes_query = (
+                            f'INSERT INTO recipebook_recipeingredient (amount, recipe_id, ingredient_id) \n'
+                            f'VALUES (\'{quantity}\',\'{dish_id}\',\'{product_id}\') RETURNING id ')
+                        cursor.execute(insert_recipes_query)
                 else:
                     product = ing
                     request = f"""select exists(select * from recipebook_ingredient where NAME = '{product}')"""
@@ -158,15 +157,15 @@ def db_fill(lst: list):
                         cursor.execute(request2)
                         product_id = cursor.fetchone()[0]
                     else:
-                        insert_product_query = f"""INSERT INTO recipebook_ingredient (NAME) VALUES ('{product}') 
+                        insert_product_query = f"""INSERT INTO recipebook_ingredient (NAME) VALUES (\'{product}\') 
                         RETURNING id """
                         cursor.execute(insert_product_query)
                         product_id = cursor.fetchone()[0]
 
-                insert_recipes_query = (f'INSERT INTO recipebook_recipeingredient (amount, recipe_id, ingredient_id) \n'
+                        insert_recipes_query = (f'INSERT INTO recipebook_recipeingredient (amount, recipe_id, ingredient_id) \n'
                                         f'VALUES (\'{quantity}\',\'{dish_id}\',\'{product_id}\') RETURNING id ')
 
-                cursor.execute(insert_recipes_query)
+                        cursor.execute(insert_recipes_query)
         connection.commit()
 
     except Exception as error:
@@ -179,7 +178,6 @@ def db_fill(lst: list):
 
 
 if __name__ == '__main__':
-    # Cписок исключений
     exception_list = ['Говядина по-китайски: "Стир-фрай" из говядины и овощей с соусом терияки | Рецепт',
                       'Грильяж приготовится очень легко и просто в духовке',
                       'Тефтели в томатным соусе',
